@@ -38,6 +38,14 @@ public class Main {
     	   System.out.println("don't serve");
        }
        String myString = "This is a string";
+       
+       
+       
+       
+       
+       
+       
+       
        myString = myString + ", and also this phrase. ";
        
        int result = 1 + 80;
@@ -59,7 +67,15 @@ public class Main {
     	   System.out.println("this result is not known");
        }
        System.out.println("Always end with this");
-   
+       
+       boolean isBlue = false;
+       boolean isRed = false;
+       if (frogs == 4) {
+    	   isBlue = true;
+       }
+        isRed = isBlue ? true : false;  // ternary operator 
+        
+        System.out.println("value of isRed is: " + isRed);
        
       
 	}
