@@ -39,19 +39,27 @@ public class Main {
        }
        String myString = "This is a string";
        myString = myString + ", and also this phrase. ";
+       
+       int result = 1 + 80;
+       result = result / 3;
+       System.out.println("result is:  " + result);
        System.out.println(myString);
-       
-       
-       
-    		   
-    		   
-    		   
-    		   
-       
-       
-       
-       
-       
+       int frogs = 4;
+       result++;
+       System.out.println("result is:  " + result);
+       result += 2;
+       System.out.println("result is:  " + result);
+       if (result == 3) {
+    	   System.out.println("this result = 3");
+       } else if ((result == 4) && (frogs == 4)) {
+    	   System.out.println("this result = 4");
+       } else if ((result > 4) && (frogs == 4)) {
+    	   System.out.println("this result > 4 ");
+       } else {
+    	   System.out.println("this result is not known");
+       }
+       System.out.println("Always end with this");
+   
        
       
 	}
