@@ -12,15 +12,15 @@ public class SpeedConverter2 {
         return Math.round(kilometersPerHour / 1.609);
     }
 //-------------------------------------------------------------------------------------
-    public static double printConversion(double kilometersPerHour) {
+    public  double printConversion(double kilometersPerHour) {
 
-        if(kilometersPerHour <0) {
-            System.out.println("Invalid Value");
+        if(kilometersPerHour < 0.0) {
+            return -1;
         } else {
             double milesPerHour = toMilesPerHour(kilometersPerHour);
-            System.out.println(kilometersPerHour +
-                    " km/h= " + milesPerHour +
-                    " mi/h");
+   //         System.out.println(kilometersPerHour +
+   //                 " km/h= " + milesPerHour +
+   //                 " mi/h");
             return milesPerHour;
 
         }
@@ -36,29 +36,8 @@ public class SpeedConverter2 {
       }
    **/
     
-}   
+ }  
 
-public class testSpeedConverter { 
-	
-	public static void main(String args[]) {
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Enter kilometers per hour:  ");
-		int kph = scanner.nextInt();
-		scanner.nextLine();
-		
-		double mph = 0.0;
-		SpeedConverter2 converter = new SpeedConverter2();
-		mph = converter.printConversion(kph);
-		
-		
-		
-		
-		
-		
-		
-		
-	}
+
 	
 	
-	
-}
