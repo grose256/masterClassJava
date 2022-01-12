@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.*;
 
 
 /**
@@ -25,13 +26,25 @@ public class JdbcSQLServerConnection {
       
 
        try {
-
+    	   System.setProperty("java.util.logging.config.file",
+    	              "/home/grose/java_work1/masterClassJava/logging.properties");
+    	   Logger logger = Logger.getLogger("com.microsoft.sqlserver.jdbc");
+    	   logger.setLevel(Level.FINE);
+    	   logger.info("an info msg");
+    	   logger.warning("a warning msg");
+    	   logger.severe("a severe msg");
+    	   logger.fine("writing fine level logs");
+    	   logger.finest("writing finest level logs");
+    	  
+    	   
+    	   
+    	   
            String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=Insurance";
            String user = "SA";
            String pass = "Sqlserver1";
      //      Statement stmt = null;
      // -----------------------------------------------------------------------------      
-           conn = DriverManager.getConnection(dbURL, user, pass);
+           conn = DriverManager.getConnection(dbURL, user, pass); //getConjnection returns a connection object
            if (conn != null) {
                DatabaseMetaData dm = (DatabaseMetaData) conn.getMetaData();
                System.out.println("Driver name: " + dm.getDriverName());
@@ -52,7 +65,20 @@ public class JdbcSQLServerConnection {
                    System.out.println("   ");
                }
            stmt.close();
-     //--------------------------------------------------------------------------------         
+     //----------------------PreparedStatement----------------------------------------------------------
+           System.out.println("The PREPARED Statement connection is  " + conn);
+           String pSQL = "SELECT TOP 10 * FROM dbo.claim;";
+           PreparedStatement pstmt = conn.prepareStatement(pSQL);
+           ResultSet prs = pstmt.executeQuery();
+           System.out.println("--ClaimNumber-----Examiner---");
+               while (prs.next()) {
+                   System.out.print(prs.getString("ClaimNumber"));
+                   System.out.print("    ");
+                   System.out.print(prs.getString("ExaminerCode"));
+                   System.out.println("   ");
+               }
+           stmt.close();
+     //--------------------------------------------------------------------------------      
            CallableStatement cstmt = conn.prepareCall("{call dbo.genGWRAutosysAPI}");
            cstmt.execute();
            cstmt.close();
