@@ -28,6 +28,7 @@ public class JdbcSQLServerConnection {
        try {
     	   System.setProperty("java.util.logging.config.file",
     	              "/home/grose/java_work1/masterClassJava/logging.properties");
+    	  
     	   Logger logger = Logger.getLogger("com.microsoft.sqlserver.jdbc");
     	   logger.setLevel(Level.FINE);
     	   logger.info("an info msg");
@@ -80,21 +81,22 @@ public class JdbcSQLServerConnection {
            stmt.close();
      //--------------------------------------------------------------------------------      
            CallableStatement cstmt = conn.prepareCall("{call dbo.genGWRAutosysAPI}");
-           cstmt.execute();
+           cstmt.executeUpdate();
            cstmt.close();
-           System.out.println("Stored procedure called successfully");
+           System.out.println("Callable Stored procedure called successfully");
            Statement verifyRowsStmt = conn.createStatement();
            String verifyRowsSQL = "Select count(*) from dbo.GWRAutosysAPI;";
            ResultSet verifyRowsrs = verifyRowsStmt.executeQuery(verifyRowsSQL);
            while (verifyRowsrs.next()) {
-           System.out.println(" The row count after the call is  " + verifyRowsrs.getString(1));
+           System.out.println(" Callable Stmt The row count after the call is  " + verifyRowsrs.getString(1));
            }   
            verifyRowsStmt.close();
            
      //---------try executing proc and storing result 
            Statement procstmt = conn.createStatement();
            String iresult = null;
-           String procsql = "DECLARE @iresult INT " + " Execute @iresult = dbo.genGWRAutosysAPI " + " SELECT 'Return Value' = @iresult ";
+           // String procsql = "DECLARE @iresult INT " + " Execute @iresult = dbo.genGWRAutosysAPI " + " SELECT 'Return Value' = @iresult ";
+         String procsql = "DECLARE @iresult INT  " + " Execute @iresult = dbo.genGWRAutosysAPI ;" + " SELECT 'Return Value' = @iresult ";
            ResultSet procrs = procstmt.executeQuery(procsql);
            //---------------
   //         Statement verifyRowsStmt2 = conn.createStatement();
@@ -105,7 +107,7 @@ public class JdbcSQLServerConnection {
   //         }   
   //         verifyRowsStmt2.close();
            //------------
-           while (procrs.next()) {
+          while (procrs.next()) {
         	   iresult = procrs.getString(1);
         	   int iresult2 = Integer.parseInt(iresult);
         	   if (iresult2 == 0) {
@@ -120,7 +122,7 @@ public class JdbcSQLServerConnection {
         		   System.exit(1);
         	   }
            
-           }
+           }  
        } catch (SQLException ex) {
            ex.printStackTrace();
        } finally {
