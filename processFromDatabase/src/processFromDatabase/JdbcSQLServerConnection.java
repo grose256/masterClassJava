@@ -32,7 +32,7 @@ public class JdbcSQLServerConnection {
     	   Logger logger = Logger.getLogger("com.microsoft.sqlserver.jdbc");
     	   logger.setLevel(Level.FINE);
     	   logger.info("an info msg");
-    	   logger.warning("a warning msg");
+    	   logger.warning("TEST 123 a warning msg");
     	   logger.severe("a severe msg");
     	   logger.fine("writing fine level logs");
     	   logger.finest("writing finest level logs");
