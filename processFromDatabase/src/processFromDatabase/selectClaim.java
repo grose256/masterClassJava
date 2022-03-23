@@ -1,10 +1,20 @@
 package processFromDatabase;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class selectClaim {
+	
+	 List<String[]> table = new ArrayList<>();
+	
+	
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -12,6 +22,9 @@ public class selectClaim {
 			   String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=Insurance";
 		       String user = "SA";
 		       String pass = "Sqlserver1";
+		       
+		       
+		   	       
 			   
 			   Connection conn = DriverManager.getConnection(dbURL, user, pass); //getConjnection returns a connection object
 		       if (conn != null) {
@@ -24,17 +37,7 @@ public class selectClaim {
 		           
 		      
 			   
-		     
-			   System.setProperty("java.util.logging.config.file",
-			              "/home/grose/java_work1/masterClassJava/logging.properties");
-			  
-			   Logger logger = Logger.getLogger("com.microsoft.sqlserver.jdbc");
-			   logger.setLevel(Level.FINE);
-			   logger.info("an info msg");
-			   logger.warning("TEST 123 a warning msg");
-			   logger.severe("a severe msg");
-			   logger.fine("writing fine level logs");
-			   logger.finest("writing finest level logs");
+		 
 		   
 		 //--------------------------------------------------------------------------------------    
 		       System.out.println("The connection is  " + conn);
@@ -44,21 +47,38 @@ public class selectClaim {
 		 String pSQL = "SELECT TOP 10 * FROM dbo.claim;";
          PreparedStatement pstmt = conn.prepareStatement(pSQL);
          ResultSet prs = pstmt.executeQuery();
-         System.out.println("--ClaimNumber-----Examiner---");
-             while (prs.next()) {
-                 System.out.print(prs.getString("ClaimNumber"));
-                 System.out.print("    ");
-                 System.out.print(prs.getString("ExaminerCode"));
-                 System.out.println("   ");
-             }
-         pstmt.close();
-		 } catch (SQLException ex) {
-			   ex.printStackTrace();
-		   } 
-	
-         
       
+         
+         System.out.println("--ClaimNumber-----Examiner---");
         
-	}
+         int nCol = prs.getMetaData().getColumnCount();
+         List<String[]> table = new ArrayList<>();
+         while( prs.next()) {
+             String[] row = new String[nCol];
+             for( int iCol = 1; iCol <= nCol; iCol++ ){
+                     Object obj = prs.getObject( iCol );
+                     row[iCol-1] = (obj == null) ?null:obj.toString();
+             }
+             table.add( row );
+         }
 
+         // print result
+         for( String[] row: table ){
+             for( String s: row ){
+                 System.out.print( " " + s );
+             }
+             System.out.println();
+         }
+         
+	       } catch (SQLException e) {
+	           System.out.println("Datababse error:");
+	           e.printStackTrace();
+	       } 
+		} 
 }
+      // print result
+		
+       
+         
+  
+ 

@@ -3,6 +3,7 @@ package processFromDatabase;
 
 
 import java.sql.Connection;
+import java.io.*;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -47,6 +48,8 @@ public class JdbcSQLServerConnection {
      // -----------------------------------------------------------------------------      
            conn = DriverManager.getConnection(dbURL, user, pass); //getConjnection returns a connection object
            if (conn != null) {
+        	   System.out.println("99999999999999999 printing connection 9999999999999999999999 ");
+        	   System.out.println("connection is " + conn);
                DatabaseMetaData dm = (DatabaseMetaData) conn.getMetaData();
                System.out.println("Driver name: " + dm.getDriverName());
                System.out.println("Driver version: " + dm.getDriverVersion());
@@ -54,23 +57,39 @@ public class JdbcSQLServerConnection {
                System.out.println("Product version: " + dm.getDatabaseProductVersion());
            }
      //--------------------------------------------------------------------------------------    
-           System.out.println("The connection is  " + conn);
+           try {
+           String csvFilePath = "MyRowCounts.csv";
+           System.out.println("777777777777 Print to CSV - The connection is  " + conn);
            Statement stmt = conn.createStatement();
            String SQL = "SELECT TOP 10 * FROM dbo.claim;";
            ResultSet rs = stmt.executeQuery(SQL);
+           BufferedWriter fileWriter = new BufferedWriter(new FileWriter(csvFilePath));
+           fileWriter.write("--ClaimNumber-----Examiner---");
            System.out.println("--ClaimNumber-----Examiner---");
                while (rs.next()) {
-                   System.out.print(rs.getString("ClaimNumber"));
-                   System.out.print("    ");
-                   System.out.print(rs.getString("ExaminerCode"));
-                   System.out.println("   ");
+                   String claimNumber = rs.getString("ClaimNumber");
+                   
+                   String examinerCode = rs.getString("ExaminerCode");
+                   String line  = String.format("\", %s\",%s",claimNumber, examinerCode);
+                   fileWriter.newLine();
+                   fileWriter.write(line);  
                }
            stmt.close();
+           fileWriter.close();
+           
+       } catch (SQLException e) {
+           System.out.println("Datababse error:");
+           e.printStackTrace();
+       } catch (IOException e) {
+           System.out.println("File IO error:");
+           e.printStackTrace();
+       }
      //----------------------PreparedStatement----------------------------------------------------------
            System.out.println("The PREPARED Statement connection is  " + conn);
            String pSQL = "SELECT TOP 10 * FROM dbo.claim;";
            PreparedStatement pstmt = conn.prepareStatement(pSQL);
            ResultSet prs = pstmt.executeQuery();
+          
            System.out.println("--ClaimNumber-----Examiner---");
                while (prs.next()) {
                    System.out.print(prs.getString("ClaimNumber"));
@@ -78,7 +97,7 @@ public class JdbcSQLServerConnection {
                    System.out.print(prs.getString("ExaminerCode"));
                    System.out.println("   ");
                }
-           stmt.close();
+          
      //--------------------------------------------------------------------------------      
            CallableStatement cstmt = conn.prepareCall("{call dbo.genGWRAutosysAPI}");
            cstmt.executeUpdate();
